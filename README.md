@@ -1,6 +1,6 @@
-# leavesSync
+# LeavesSync
 This project helps to create a google calender event as soon as the leave of the employee gets approved from the system. This projects uses Google Apps Script to scan the email and create calender event.
 
-#setup
+# setup
 
 This script is created through Google Apps script. Following are steps needed to setup this project
