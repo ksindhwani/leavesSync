@@ -1,9 +1,7 @@
-var displayName = "Kunal Sindhwani";
+var yourDisplayName = "Kunal Sindhwani";
 
 function syncEmployeeLeavesInCalender() {
-  //var leaveApprovalEmailFilter = 'subject:"Approved: Approval of Leave" After: 2021-06-14 from:hcch.fa.sender@workflow.mail.em2.cloud.oracle.com'
   employeeLeaves = getLeaveApprovalEmails();
-  Logger.log(employeeLeaves.length);
   addLeavesInCalender(employeeLeaves);
 } 
 
@@ -11,10 +9,12 @@ function addLeavesInCalender(employeeLeaves) {
   var minMaxDates = getMinMaxDates(employeeLeaves);
   var fromDate = minMaxDates[0];
   var toDate = minMaxDates[1];
-  var leaveEvent = CalendarApp.getDefaultCalendar().createAllDayEvent(displayName + " On Leave",fromDate,toDate)
+  var engineeringCalender=CalendarApp.getCalendarsByName('TestAutoLeaves');
+  Logger.log("Calender Name " + engineeringCalender[0].getName());
+  Logger.log("From " + fromDate.toDateString());
+  Logger.log("To " + toDate.toDateString());
+  var leaveEvent = engineeringCalender[0].createAllDayEvent(yourDisplayName + " On Leave",fromDate,toDate);
   Logger.log("Event Id " + leaveEvent.getId());
-  /*Logger.log(fromDate.toDateString());
-  Logger.log(toDate.toDateString());*/
 
 }
 
@@ -47,12 +47,23 @@ function getMailSubject(mail){
 }
 
 function getLeaveApprovalEmails() {
-  var annualLeaveEmailFilter = 'subject:"Approved: Approval of Annual Leave" After: 2021-06-15';
-  var compOffEmailFilter = 'subject:"Approved: Approval of Compensatory Off" After: 2021-06-15';
+  var todayDate = getTodayStartEpochTime();
+  Logger.log(todayDate);
+  //var annualLeaveEmailFilter = 'subject:"Approved: Approval of Annual Leave" After: $(todayDate) from:hcch.fa.sender@workflow.mail.em2.cloud.oracle.com';
+  //var compOffEmailFilter = 'subject:"Approved: Approval of Compensatory Off" After: $(todayDate) from:hcch.fa.sender@workflow.mail.em2.cloud.oracle.com';
+  const annualLeaveEmailFilter = `subject:"Approved: Approval of Annual Leave" After: ${todayDate}`;
+  const compOffEmailFilter = `subject:"Approved: Approval of Compensatory Off" After: ${todayDate}`;
   var annualLeaveApprovalEmails = GmailApp.search(annualLeaveEmailFilter);
   var compOffLeaveApprovalEmails = GmailApp.search(compOffEmailFilter);
-  Logger.log("Annual Leaves " + annualLeaveApprovalEmails.length);
-  Logger.log("Comp Off Leaves " + compOffLeaveApprovalEmails.length);
+  Logger.log("Total Annual Leaves " + annualLeaveApprovalEmails.length);
+  Logger.log("Total Comp Off Leaves " + compOffLeaveApprovalEmails.length);
   var employeeLeaves = annualLeaveApprovalEmails.concat(compOffLeaveApprovalEmails);
   return employeeLeaves;
+}
+
+function getTodayStartEpochTime() {
+  const secondsSinceEpoch = (date) => Math.floor(date.getTime() / 1000);
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  return secondsSinceEpoch(today);
 }
