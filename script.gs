@@ -1,5 +1,5 @@
 var yourDisplayName = "Kunal Sindhwani";
-
+var calenderName = "TestAutoLeaves";
 function syncEmployeeLeavesInCalender() {
   employeeLeaves = getLeaveApprovalEmails();
   addLeavesInCalender(employeeLeaves);
@@ -9,10 +9,14 @@ function addLeavesInCalender(employeeLeaves) {
   var minMaxDates = getMinMaxDates(employeeLeaves);
   var fromDate = minMaxDates[0];
   var toDate = minMaxDates[1];
-  var engineeringCalender=CalendarApp.getCalendarsByName('TestAutoLeaves');
+  if (fromDate == undefined || toDate == undefined) {
+    Logger.log("Can't create Leave in calender, undefined from and to date");
+    return;
+  }
+  var engineeringCalender=CalendarApp.getCalendarsByName(calenderName);
   Logger.log("Calender Name " + engineeringCalender[0].getName());
-  Logger.log("From " + fromDate.toDateString());
-  Logger.log("To " + toDate.toDateString());
+  Logger.log("From " + fromDate);
+  Logger.log("To " + toDate);
   var leaveEvent = engineeringCalender[0].createAllDayEvent(yourDisplayName + " On Leave",fromDate,toDate);
   Logger.log("Event Id " + leaveEvent.getId());
 
@@ -48,11 +52,9 @@ function getMailSubject(mail){
 
 function getLeaveApprovalEmails() {
   var todayDate = getTodayStartEpochTime();
-  Logger.log(todayDate);
-  //var annualLeaveEmailFilter = 'subject:"Approved: Approval of Annual Leave" After: $(todayDate) from:hcch.fa.sender@workflow.mail.em2.cloud.oracle.com';
-  //var compOffEmailFilter = 'subject:"Approved: Approval of Compensatory Off" After: $(todayDate) from:hcch.fa.sender@workflow.mail.em2.cloud.oracle.com';
-  const annualLeaveEmailFilter = `subject:"Approved: Approval of Annual Leave" After: ${todayDate}`;
-  const compOffEmailFilter = `subject:"Approved: Approval of Compensatory Off" After: ${todayDate}`;
+Logger.log(todayDate);
+const annualLeaveEmailFilter = `subject:"Approved: Approval of Annual Leave" After: ${todayDate} from:hcch.fa.sender@workflow.mail.em2.cloud.oracle.com`;
+const compOffEmailFilter = `subject:"Approved: Approval of Compensatory Off" After: ${todayDate} from:hcch.fa.sender@workflow.mail.em2.cloud.oracle.com`;
   var annualLeaveApprovalEmails = GmailApp.search(annualLeaveEmailFilter);
   var compOffLeaveApprovalEmails = GmailApp.search(compOffEmailFilter);
   Logger.log("Total Annual Leaves " + annualLeaveApprovalEmails.length);
