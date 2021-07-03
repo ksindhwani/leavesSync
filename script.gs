@@ -1,5 +1,5 @@
-var yourDisplayName = "Kunal Sindhwani";
-var calenderName = "TestAutoLeaves";
+var yourDisplayName = "<your Display Name>"; // "John Smith"
+var calenderName = "<calender name in which leaves need to be created"; // "Dev Leaves"
 function syncEmployeeLeavesInCalender() {
   employeeLeaves = getLeaveApprovalEmails();
   addLeavesInCalender(employeeLeaves);
