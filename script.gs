@@ -1,48 +1,47 @@
-var yourDisplayName = "<your Display Name>"; // "John Smith"
-var calenderName = "<calender name in which leaves need to be created"; // "Dev Leaves"
+const yourDisplayName = "<yourName>"; // "John Smith"
+const calenderName = "<Calender Name>"; // "Dev Leaves"
 function syncEmployeeLeavesInCalender() {
   employeeLeaves = getLeaveApprovalEmails();
   addLeavesInCalender(employeeLeaves);
 } 
 
 function addLeavesInCalender(employeeLeaves) {
-  var minMaxDates = getMinMaxDates(employeeLeaves);
-  var fromDate = minMaxDates[0];
-  var toDate = minMaxDates[1];
-  if (fromDate == undefined || toDate == undefined) {
-    Logger.log("Can't create Leave in calender, undefined from and to date");
-    return;
-  }
-  var engineeringCalender=CalendarApp.getCalendarsByName(calenderName);
-  Logger.log("Calender Name " + engineeringCalender[0].getName());
-  Logger.log("From " + fromDate);
-  Logger.log("To " + toDate);
-  var leaveEvent = engineeringCalender[0].createAllDayEvent(yourDisplayName + " On Leave",fromDate,toDate);
-  Logger.log("Event Id " + leaveEvent.getId());
-
-}
-
-function getMinMaxDates(employeeLeaves){
-  var minFromDate,maxToDate;
   for(var index = 0; index<employeeLeaves.length;index++){
-    leaveMailSubject = getMailSubject(employeeLeaves[index]);
-    var dateString = leaveMailSubject.substring(leaveMailSubject.indexOf('from'));
-    var dateStringSplit = dateString.split(" ");
-    var fromDate = new Date(dateStringSplit[1]);
-    var toDate = new Date(dateStringSplit[3]);
-    if (minFromDate == undefined && maxToDate == undefined) {
-      minFromDate = fromDate;
-      maxToDate = toDate;
-      } else{
-        if (minFromDate > fromDate) {
-          minFromDate = fromDate;
-        }
-        if(maxToDate < toDate) {
-          maxToDate = toDate;
-        }
+    var fromToDates = getFromToDates(employeeLeaves[index]);
+    var fromDate = fromToDates[0];
+    var toDate = fromToDates[1];
+    if (fromDate == undefined || toDate == undefined) {
+      Logger.log("Can't create Leave in calender, undefined from and to date");
+      continue;
     }
-  }
-  return [minFromDate,maxToDate];
+    var engineeringCalender=CalendarApp.getCalendarsByName(calenderName);
+    Logger.log("Calender Name " + engineeringCalender[0].getName());
+    Logger.log("From " + fromDate);
+    Logger.log("To " + toDate);
+    if (isSingleDayEvent(fromDate,toDate)) {
+      toDate = null;
+    }
+    var leaveEvent = engineeringCalender[0].createAllDayEvent(yourDisplayName + " On Leave",fromDate,toDate);
+    Logger.log("Event Id " + leaveEvent.getId());
+    }
+}
+/**
+ * @param {Date} fromDate 
+ * @param {Date} toDate
+ */
+function isSingleDayEvent(fromDate,toDate){
+  return  fromDate.getFullYear() == toDate.getFullYear()
+      &&  fromDate.getMonth() == toDate.getMonth()
+      &&  fromDate.getDate() == toDate.getDate()   
+}
+function getFromToDates(employeeLeave){
+  leaveMailSubject = getMailSubject(employeeLeave);
+  var dateString = leaveMailSubject.substring(leaveMailSubject.indexOf('from'));
+  var dateStringSplit = dateString.split(" ");
+  var fromDate = new Date(dateStringSplit[1]);
+  var toDate = new Date(dateStringSplit[3]);
+  toDate.setDate(toDate.getDate() + 1); //. Google Calender event creates event from StartDate -> EndDate-1
+  return [fromDate,toDate];
 }
 
 function getMailSubject(mail){
@@ -53,8 +52,8 @@ function getMailSubject(mail){
 function getLeaveApprovalEmails() {
   var todayDate = getTodayStartEpochTime();
 Logger.log(todayDate);
-const annualLeaveEmailFilter = `subject:"Approved: Approval of Annual Leave" After: ${todayDate} from:hcch.fa.sender@workflow.mail.em2.cloud.oracle.com`;
-const compOffEmailFilter = `subject:"Approved: Approval of Compensatory Off" After: ${todayDate} from:hcch.fa.sender@workflow.mail.em2.cloud.oracle.com`;
+const annualLeaveEmailFilter = `subject:"Approved: Approval of Annual Leave" After: ${todayDate}`;
+const compOffEmailFilter = `subject:"Approved: Approval of Compensatory Off" After: ${todayDate}`;
   var annualLeaveApprovalEmails = GmailApp.search(annualLeaveEmailFilter);
   var compOffLeaveApprovalEmails = GmailApp.search(compOffEmailFilter);
   Logger.log("Total Annual Leaves " + annualLeaveApprovalEmails.length);
