@@ -1,5 +1,5 @@
-const yourDisplayName = "Kunal Sindhwani"; // "John Smith"
-const calenderName = "Engineering Leave Calendar"; // "Dev Leaves"
+const yourDisplayName = "<your name>"; // "John Smith"
+const calenderName = "<calendar name>"; // "Dev Leaves"
 function syncEmployeeLeavesInCalender() {
   employeeLeaves = getLeaveApprovalEmails();
   addLeavesInCalender(employeeLeaves);
