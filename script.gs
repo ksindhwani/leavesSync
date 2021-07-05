@@ -1,5 +1,5 @@
-const yourDisplayName = "<yourName>"; // "John Smith"
-const calenderName = "<Calender Name>"; // "Dev Leaves"
+const yourDisplayName = "Kunal Sindhwani"; // "John Smith"
+const calenderName = "Engineering Leave Calendar"; // "Dev Leaves"
 function syncEmployeeLeavesInCalender() {
   employeeLeaves = getLeaveApprovalEmails();
   addLeavesInCalender(employeeLeaves);
@@ -14,14 +14,20 @@ function addLeavesInCalender(employeeLeaves) {
       Logger.log("Can't create Leave in calender, undefined from and to date");
       continue;
     }
-    var engineeringCalender=CalendarApp.getCalendarsByName(calenderName);
-    Logger.log("Calender Name " + engineeringCalender[0].getName());
+    var calenderArray=CalendarApp.getCalendarsByName(calenderName);
+    var targetCalendar;
+    if (calenderArray.length == 0) {
+      targetCalendar = CalendarApp.getDefaultCalendar();
+    } else{
+      targetCalendar = calenderArray[0];
+    }
+    Logger.log("Calender Name " + targetCalendar.getName());
     Logger.log("From " + fromDate);
     Logger.log("To " + toDate);
     if (isSingleDayEvent(fromDate,toDate)) {
       toDate = null;
     }
-    var leaveEvent = engineeringCalender[0].createAllDayEvent(yourDisplayName + " On Leave",fromDate,toDate);
+    var leaveEvent = targetCalendar.createAllDayEvent(yourDisplayName + " On Leave",fromDate,toDate);
     Logger.log("Event Id " + leaveEvent.getId());
     }
 }
