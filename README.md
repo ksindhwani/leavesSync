@@ -25,7 +25,7 @@ This script is created through Google Apps script. Currently the project is scri
 
 <img width="1000" alt="Screenshot 2021-07-04 at 6 13 18 AM" src="https://user-images.githubusercontent.com/45733301/124367994-2e4a7e00-dc8f-11eb-8f0d-b9f68b0d0fa7.png">
 
-* On the first 2 lines of the script, please enter your **Display Name** (will be displayed on calender leave event) and **Calender Name** (case-sensitive) where user wants to create the leave event.
+* On the first 2 lines of the script, please enter your **Display Name** (will be displayed on calender leave event) and **Calender Name** (case-insensitive) where user wants to create the leave event.
 <img width="731" alt="Screenshot 2021-07-04 at 6 23 59 AM" src="https://user-images.githubusercontent.com/45733301/124368124-8df55900-dc90-11eb-98c5-a771d0b37a03.png">
 
 * Add the **Gmail** and **Calender** Services in your script scope by creating the :heavy_plus_sign: icon on the left sidebar along with **Services** section. This is to call the required APIs from the script.
