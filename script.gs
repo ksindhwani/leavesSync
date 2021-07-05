@@ -58,8 +58,8 @@ function getMailSubject(mail){
 function getLeaveApprovalEmails() {
   var todayDate = getTodayStartEpochTime();
 Logger.log(todayDate);
-const annualLeaveEmailFilter = `subject:"Approved: Approval of Annual Leave" After: ${todayDate}`;
-const compOffEmailFilter = `subject:"Approved: Approval of Compensatory Off" After: ${todayDate}`;
+const annualLeaveEmailFilter = `subject:"Approved: Approval of Annual Leave" After: ${todayDate} from:hcch.fa.sender@workflow.mail.em2.cloud.oracle.com`;
+const compOffEmailFilter = `subject:"Approved: Approval of Compensatory Off" After: ${todayDate} from:hcch.fa.sender@workflow.mail.em2.cloud.oracle.com`;
   var annualLeaveApprovalEmails = GmailApp.search(annualLeaveEmailFilter);
   var compOffLeaveApprovalEmails = GmailApp.search(compOffEmailFilter);
   Logger.log("Total Annual Leaves " + annualLeaveApprovalEmails.length);
