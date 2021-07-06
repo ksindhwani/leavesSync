@@ -103,7 +103,7 @@ Please follow the the steps to setup automatic triggers. The above successful ex
     * To See the Executions Timeline, Click on **Executions** from left Side Bar. You can also see the logs from this screen too by clicking on the particular  execution.
    <img width="1000" alt="Screenshot 2021-07-05 at 10 12 22 AM" src="https://user-images.githubusercontent.com/45733301/124408773-88c00900-dd79-11eb-92df-5fa01897ecb8.png">
 
-## Future Action Items (Its never done)
+## Future Action Items
 * Handle some edge cases like 
   * Handle duplicated Events in Calandar
   * Merging the continuous leaves events into one event.
